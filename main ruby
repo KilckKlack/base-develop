@@ -1,0 +1,90 @@
+class TodoList
+  def initialize
+    @tasks = []
+  end
+
+  def add_task(description)
+    task = { description: description, completed: false }
+    @tasks << task
+    puts "Задача '#{description}' добавлена."
+  end
+
+  def complete_task(index)
+    if valid_index?(index)
+      @tasks[index][:completed] = true
+      puts "Задача '#{@tasks[index][:description]}' выполнена."
+    else
+      puts "Ошибка: Неверный номер задачи."
+    end
+  end
+
+  def delete_task(index)
+    if valid_index?(index)
+      task = @tasks.delete_at(index)
+      puts "Задача '#{task[:description]}' удалена."
+    else
+      puts "Ошибка: Неверный номер задачи."
+    end
+  end
+
+  def list_tasks
+    if @tasks.empty?
+      puts "Список задач пуст."
+    else
+      puts "Текущие задачи:"
+      @tasks.each_with_index do |task, index|
+        status = task[:completed] ? " [Выполнена]" : " [Не выполнена]"
+        puts "#{index + 1}. #{task[:description]}#{status}"
+      end
+    end
+  end
+
+  private
+
+  def valid_index?(index)
+    index >= 0 && index < @tasks.size
+  end
+end
+
+def menu
+  puts "\nМеню:"
+  puts "1. Добавить задачу"
+  puts "2. Отметить задачу как выполненную"
+  puts "3. Удалить задачу"
+  puts "4. Показать список задач"
+  puts "5. Выйти"
+end
+
+def main
+  todo_list = TodoList.new
+
+  loop do
+    menu
+    print "\nВыберите действие: "
+    choice = gets.to_i
+
+    case choice
+    when 1
+      print "Введите описание задачи: "
+      description = gets.chomp
+      todo_list.add_task(description)
+    when 2
+      print "Введите номер задачи для отметки как выполненной: "
+      index = gets.to_i - 1
+      todo_list.complete_task(index)
+    when 3
+      print "Введите номер задачи для удаления: "
+      index = gets.to_i - 1
+      todo_list.delete_task(index)
+    when 4
+      todo_list.list_tasks
+    when 5
+      puts "Выход из программы."
+      break
+    else
+      puts "Ошибка: Неверный выбор."
+    end
+  end
+end
+
+main
